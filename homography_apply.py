@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def homography_apply(H, x1, y1):
 
     pts1 = np.vstack((x1, y1, np.ones_like(x1)))  

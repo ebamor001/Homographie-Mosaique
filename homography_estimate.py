@@ -19,8 +19,8 @@ def homography_estimate(x1, y1, x2, y2):
 
     # Reconstruction de H (h33 = 1)
     H = np.array([
-        [X[0], X[1], X[2]],
-        [X[3], X[4], X[5]],
-        [X[6], X[7], 1.0]
+        [X[0,0], X[1,0], X[2,0]],
+        [X[3,0], X[4,0], X[5,0]],
+        [X[6,0], X[7,0], 1.0]
     ])
     return H
