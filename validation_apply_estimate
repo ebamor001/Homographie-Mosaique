@@ -1,0 +1,56 @@
+import numpy as np
+
+def homography_estimate(x1, y1, x2, y2):
+    A = np.zeros((8, 8))
+    B = np.zeros((8, 1))
+
+    for i in range(4):
+        X1, Y1 = x1[i], y1[i]
+        X2, Y2 = x2[i], y2[i]
+
+        A[2*i]     = [X1, Y1, 1, 0, 0, 0, -X2*X1, -X2*Y1]
+        A[2*i + 1] = [0, 0, 0, X1, Y1, 1, -Y2*X1, -Y2*Y1]
+
+        B[2*i]     = X2
+        B[2*i + 1] = Y2
+
+    X = np.linalg.solve(A, B)
+
+    H = np.array([
+        [X[0,0], X[1,0], X[2,0]],
+        [X[3,0], X[4,0], X[5,0]],
+        [X[6,0], X[7,0], 1.0]
+    ])
+    return H
+
+
+def homography_apply(H, x1, y1):
+    pts = np.vstack((x1, y1, np.ones_like(x1)))
+    pts2 = H @ pts
+    pts2 /= pts2[2]
+    return pts2[0], pts2[1]
+
+
+# ----- Validation -----
+
+# 4 points source (carré)
+x1 = np.array([0, 1, 1, 0])
+y1 = np.array([0, 0, 1, 1])
+
+# 4 points destination (quadrilatère)
+x2 = np.array([10, 40, 35, 12])
+y2 = np.array([20, 18, 45, 50])
+
+# 1) Estimation
+H = homography_estimate(x1, y1, x2, y2)
+print("H =\n", H)
+
+# 2) Application de l'homographie aux points source
+x2_pred, y2_pred = homography_apply(H, x1, y1)
+
+print("\nPoints destination attendus :")
+print(x2, y2)
+
+print("\nPoints calculés après transformation :")
+print(x2_pred, y2_pred)
+
