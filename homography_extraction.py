@@ -23,7 +23,8 @@ def homography_extraction(I1, x, y, w, h):
     xs_flat, ys_flat = homography_apply(H, xx_flat, yy_flat)
     
     # rendre en 2,h*w
-    coords = np.vstack([ys_flat, xs_flat])   
+    coords = np.vstack([ys_flat, xs_flat])
+    
 
     # Interpolation bilinéaire 
     I2_flat = map_coordinates(I1, coords, order=1, mode='constant', cval=0.0)
